@@ -10,7 +10,7 @@
       }
     },
     "production": {
-      "node": "12.18.0",
+      "node": "16.18.1",
       "android": {
         "buildType": "app-bundle"
       }
