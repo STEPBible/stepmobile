@@ -1,5 +1,4 @@
 import normalizeText from './normalizeText'
-import { Analytics } from 'expo-analytics'
 import { Asset } from 'expo-asset'
 import { DefaultTheme } from 'react-native-paper'
 import Constants from 'expo-constants'
