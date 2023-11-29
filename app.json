@@ -46,7 +46,7 @@
         "png"
       ]
     },
-    "githubUrl": "https://github.com/tyndale/BibleEngine",
+    "githubUrl": "https://github.com/tyndale/stepmobile",
     "hooks": {
       "postPublish": [
         {
@@ -63,6 +63,7 @@
       "eas": {
         "projectId": "99da7c00-c09a-11e9-89ae-6d0b082b081b"
       }
-    }
+    },
+    "owner": "tyndale-house-uk"
   }
 }

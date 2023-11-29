@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Image, Dimensions } from 'react-native'
 import { TouchableRipple, ActivityIndicator } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import store from 'react-native-simple-store'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {
   FontFamily,
@@ -24,7 +24,7 @@ export default class OfflineSuccessScreen extends React.Component {
   }
   onPress = () => {
     this.setState({ loading: true })
-    store.save(AsyncStorageKey.HAS_LAUNCHED, true)
+    AsyncStorage.setItem(AsyncStorageKey.HAS_LAUNCHED, 'true')
     this.props.navigation.popToTop()
   }
   buttonElement = () => {

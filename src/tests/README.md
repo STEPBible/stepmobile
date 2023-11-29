@@ -42,4 +42,4 @@
 * As a user, I want a way to leave feedback, so I can get new features that I need and report issues
     1. Open settings drawer
     1. Click on feedback button
-    1. Verify it opens to a mail client to tyndalestep@gmail.com
+    1. Verify it opens to a mail client to feedback@stepbible.org
