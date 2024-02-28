@@ -5,7 +5,7 @@ import React from 'react'
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native'
 import { FAB } from 'react-native-paper'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
-import store from 'react-native-simple-store'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import bibleStore from './BibleStore'
 import {
   AsyncStorageKey, FontFamily, FontSize, getDebugStyles, Margin, Settings
@@ -37,9 +37,10 @@ class HomeScreen extends React.Component<{}, {}> {
 
   constructor(props) {
     super(props)
-    store.get(AsyncStorageKey.HAS_LAUNCHED).then(hasLaunched => {
+    AsyncStorage.getItem(AsyncStorageKey.HAS_LAUNCHED).then(value => {
+      const hasLaunched = !!value;
       if (!hasLaunched) {
-        props.navigation.navigate('Onboarding')
+        props.navigation.navigate('OfflineLoading')
         bibleStore.loadSearchIndex()
       }
     })
@@ -84,14 +85,14 @@ class HomeScreen extends React.Component<{}, {}> {
       return <View key={`section-${index}`}>{this.renderSection(content)}</View>
     }
     if (content.type === 'group') {
-        return (
-          <View key={`group-${index}`}>
-            <View style={styles.paragraph}>
-              {this.renderVerseNumber(content)}
-              {children.map((child, index) => this.renderItem(child, index))}
-            </View>
+      return (
+        <View key={`group-${index}`}>
+          <View style={styles.paragraph}>
+            {this.renderVerseNumber(content)}
+            {children.map((child, index) => this.renderItem(child, index))}
           </View>
-        )
+        </View>
+      )
     }
   }
 
@@ -177,7 +178,8 @@ class HomeScreen extends React.Component<{}, {}> {
                 {phrase}
               </Text>
             </View>
-          )})
+          )
+        })
         }
         {this.renderFootnote(content)}
       </View>
@@ -186,7 +188,7 @@ class HomeScreen extends React.Component<{}, {}> {
 
   isPunctuationChar(phrase: string) {
     return ['.', ',', ':', '?', '!', ';'].includes(phrase.trim().slice(0, 1))
-}
+  }
 
   renderFlatlistItem = ({ item, index }) => {
     return this.renderItem(item, index)
