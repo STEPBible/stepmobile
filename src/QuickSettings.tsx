@@ -22,7 +22,7 @@ export default class QuickSettings extends React.Component<{}, {}> {
   }
 
   openFeedbackEmail() {
-    const EMAIL = 'TyndaleSTEP@gmail.com'
+    const EMAIL = 'feedback@stepbible.org'
     const SUBJECT = 'STEP Bible App Feedback'
     const BODY = ''
     Linking.openURL(`mailto:${EMAIL}?subject=${SUBJECT}&body=${BODY}`)

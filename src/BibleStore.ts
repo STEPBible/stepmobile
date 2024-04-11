@@ -1,11 +1,8 @@
 import {
   BibleBookEntity, BibleEngine, BOOK_DATA, IBibleCrossReference, IBibleReferenceRangeQuery, IBibleVersion
 } from '@bible-engine/core'
-import {
-  GOOGLE_ANALYTICS_TRACKING_ID, SENTRY_DSN
-} from '@env'
+import { SENTRY_DSN } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Analytics, PageHit } from 'expo-analytics'
 import * as FileSystem from 'expo-file-system'
 import { action, observable } from 'mobx'
 import { AsyncTrunk, ignore, version } from 'mobx-sync'
@@ -17,7 +14,6 @@ import { BibleModule, BIBLE_MODULES, LexiconModule, LEXICON_MODULE, SQLITE_DIREC
 import Fonts from './Fonts'
 import JsonAsset from './JsonAsset'
 
-const analytics = new Analytics(GOOGLE_ANALYTICS_TRACKING_ID)
 let bibleEngine: BibleEngine;
 let lexiconEngine: BibleEngine;
 let cache: AsyncTrunk
@@ -124,7 +120,7 @@ class BibleStore {
         type: 'expo',
         driver: require('expo-sqlite'),
         synchronize: false,
-        migrationsRun: false,
+        migrationsRun: true,
         name: `${module.filenamebase}-engine`
       }
       const LEXICON_ENGINE_OPTIONS: ConnectionOptions = {
@@ -132,8 +128,8 @@ class BibleStore {
         database: LEXICON_MODULE.filename,
         name: 'lexicon-engine'
       }
-      bibleEngine = new BibleEngine(BIBLE_ENGINE_OPTIONS, {checkForExistingConnection: true})
-      lexiconEngine = new BibleEngine(LEXICON_ENGINE_OPTIONS, {checkForExistingConnection: true})
+      bibleEngine = new BibleEngine(BIBLE_ENGINE_OPTIONS, { checkForExistingConnection: true })
+      lexiconEngine = new BibleEngine(LEXICON_ENGINE_OPTIONS, { checkForExistingConnection: true })
     } catch (e) {
       console.log('setLocalDatabase had exception', e)
       Sentry.Native.captureException(e)
@@ -151,7 +147,7 @@ class BibleStore {
   async setupBibleModule(module: BibleModule | LexiconModule) {
     const files = await FileSystem.readDirectoryAsync(`${FileSystem.documentDirectory}SQLite/`)
     files.forEach(async file => {
-      if(file.startsWith(module.filenamebase) && !file.startsWith(module.filename)) {
+      if (file.startsWith(module.filenamebase) && !file.startsWith(module.filename)) {
         await FileSystem.deleteAsync(`${FileSystem.documentDirectory}SQLite/${file}`, { idempotent: true })
       }
     })
@@ -287,12 +283,12 @@ class BibleStore {
   }
 
   goToPreviousChapter = () => {
-    if(this.chapterSections.length === 0) return
+    if (this.chapterSections.length === 0) return
     this.updateCurrentBibleReference(this.previousRange)
   }
 
   goToNextChapter = () => {
-    if(this.chapterSections.length === 0) return
+    if (this.chapterSections.length === 0) return
     this.updateCurrentBibleReference(this.nextRange)
   }
 
@@ -340,7 +336,7 @@ class BibleStore {
       !BOOK_DATA[this.bookOsisId] ||
       !this.cacheIsRestored
     )
-    return ''
+      return ''
     const title = this.books.find(
       book => book.osisId === this.bookOsisId
     )?.title || ''
@@ -365,8 +361,7 @@ class BibleStore {
   }
 
   captureAnalyticsEvent() {
-    const reference = `${this.bookOsisId} ${this.versionChapterNum} ${this.versionUid}`
-    analytics.hit(new PageHit(reference))
+    // TODO: Google Analytics turned down. Integrate with Cloudflare analytics as used for Stepbible website
   }
 }
 
